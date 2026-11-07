@@ -19,7 +19,7 @@ where useful, a screenshot in [evidence/](../evidence).
 
 ---
 
-## AE-UI-003 · Cart accepts zero and negative quantities, giving a negative total
+## AE-UI-003, Cart accepts zero and negative quantities, giving a negative total
 
 | | |
 |---|---|
@@ -45,7 +45,7 @@ revenue risk. Server-side validation is needed, not just a `min` attribute on th
 
 ---
 
-## AE-API-006 · `createAccount` accepts an email with no valid format
+## AE-API-006, `createAccount` accepts an email with no valid format
 
 | | |
 |---|---|
@@ -68,7 +68,7 @@ web signup form does block invalid emails in the browser, so the API is the weak
 
 ---
 
-## AE-UI-002 · Critical accessibility issues: unnamed buttons and an unlabelled field
+## AE-UI-002, Critical accessibility issues: unnamed buttons and an unlabelled field
 
 | | |
 |---|---|
@@ -88,7 +88,7 @@ subscription arrow have no accessible name, so a screen reader announces just "b
 
 ---
 
-## AE-UI-001 · Payment accepts malformed and expired card details
+## AE-UI-001, Payment accepts malformed and expired card details
 
 | | |
 |---|---|
@@ -107,7 +107,7 @@ real payment integration adds format, Luhn and expiry checks before the request 
 
 ---
 
-## AE-UI-004 · Header menu doesn't collapse on mobile screens
+## AE-UI-004, Header menu doesn't collapse on mobile screens
 
 | | |
 |---|---|
@@ -125,7 +125,7 @@ There's no horizontal scrolling, so the site remains usable.
 
 ---
 
-## AE-API-001 · Error responses return HTTP 200 instead of the documented 4xx code
+## AE-API-001, Error responses return HTTP 200 instead of the documented 4xx code
 
 | | |
 |---|---|
@@ -151,7 +151,7 @@ success. Any consumer has to parse the body to find out whether a call failed.
 
 ---
 
-## AE-API-002 · JSON responses are sent with `Content-Type: text/html`
+## AE-API-002, JSON responses are sent with `Content-Type: text/html`
 
 | | |
 |---|---|
@@ -172,7 +172,7 @@ treat the payload as HTML. Tools like Postman don't pretty-print or validate it 
 
 ---
 
-## AE-API-003 · `brandsList` repeats each brand once per product
+## AE-API-003, `brandsList` repeats each brand once per product
 
 | | |
 |---|---|
@@ -191,7 +191,7 @@ don't identify a brand.
 
 ---
 
-## AE-API-004 · `Allow` header lists methods the endpoint rejects
+## AE-API-004, `Allow` header lists methods the endpoint rejects
 
 | | |
 |---|---|
@@ -209,7 +209,7 @@ DELETE all answer "This request method is not supported."
 
 ---
 
-## AE-API-005 · API answers over plain HTTP with no redirect or HSTS
+## AE-API-005, API answers over plain HTTP with no redirect or HSTS
 
 | | |
 |---|---|

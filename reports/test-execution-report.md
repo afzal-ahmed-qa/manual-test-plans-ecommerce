@@ -6,7 +6,7 @@
 | Tester | Afzal Ahmed |
 | Environment | Production demo, https://automationexercise.com |
 | Browser / tools | Chrome 130 on Windows 11 (headed, watched live), curl, Node.js fetch, axe-core |
-| Cycles | 1: API read-only calls · 2: API account lifecycle and all UI cases |
+| Cycles | 1: API read-only calls, 2: API account lifecycle and all UI cases |
 
 ## Summary
 

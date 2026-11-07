@@ -1,82 +1,98 @@
-# Manual Test Plans – E-commerce Web Shop and REST API
+# Manual test plans: e-commerce web shop and REST API
 
-Test strategy, test plans, test cases, traceability, defect reports and an execution report for
-**[Automation Exercise](https://automationexercise.com)**, a public e-commerce practice site with a
-web shop and a 14-endpoint REST API.
+This is the manual testing side of my portfolio. It's a full set of test documentation for
+[Automation Exercise](https://automationexercise.com), a public practice shop with a product
+catalogue, cart, checkout and a 14-endpoint REST API. There's a test strategy, separate UI and API
+test plans, 88 test cases, a traceability matrix, defect reports and an execution report.
 
-This repo shows the manual QA side of my work: how I analyse an application with no
-specification, turn that into requirements and risk-based test cases, run them and report what I
-find. The automation side is in
+The site doesn't publish a specification, which is pretty common on real projects too. So I
+worked out the requirements myself from the live site and the API documentation, wrote the cases
+from those, ran them, and wrote up what I found.
+
+For automation, see my Playwright framework:
 [playwright-typescript-e2e-framework](https://github.com/afzal-ahmed-qa/playwright-typescript-e2e-framework).
 
-## At a glance
+## Results
 
-| | UI | API |
-|---|---|---|
-| Test cases | 50 | 38 |
-| Priority (High / Medium / Low) | 22 / 17 / 11 | 20 / 14 / 4 |
-| Executed | 49 of 50 | 38 of 38 |
-| Result | 45 pass · 4 fail · 1 blocked | 17 pass · 20 fail · 1 query |
-| Defects raised | 4 | 6 |
+Run on 7 November 2026.
 
-10 defects in total (5 Major, 4 Minor, 1 Trivial). 32 of 32 requirements covered, 18 met
-([traceability matrix](traceability-matrix.md)).
+| | Cases | Pass | Fail | Other |
+|---|---|---|---|---|
+| UI | 50 | 45 | 4 | 1 blocked |
+| API | 38 | 17 | 20 | 1 query |
 
-## What's inside
+I raised 10 defects (5 Major, 4 Minor, 1 Trivial) and logged 5 questions where the expected
+behaviour wasn't clear enough to call it a bug. All 32 requirements have test cases; 18 are
+currently met.
 
-| Document | What it covers |
-|---|---|
-| [Test strategy](test-strategy.md) | Objectives, scope, test types, approach, environments, entry/exit criteria, risks |
-| [UI test plan](ui/ui-test-plan.md) | Features, risk rating, decision tables, boundaries, data, schedule, exploratory charters |
-| [UI test cases](ui/test-cases.md) · [CSV](ui/test-cases.csv) | 50 cases: registration, catalogue, cart, checkout, contact, non-functional, 3 E2E journeys |
-| [API test plan](api/api-test-plan.md) | Endpoint inventory, checks per endpoint, method matrix, input classes, account lifecycle |
-| [API test cases](api/test-cases.md) · [CSV](api/test-cases.csv) | 38 cases with request, expected and actual result |
-| [Traceability matrix](traceability-matrix.md) | 32 derived requirements → test cases → latest result |
-| [Defect reports](defects/defect-reports.md) | 10 reproducible defects with steps, curl commands or screenshots, plus 5 open questions |
-| [Execution report](reports/test-execution-report.md) | Results by module, how the run was done, what was re-checked, recommendation |
-| [Evidence](evidence) | Screenshots attached to defects |
-| [Templates](templates) | Bug report and test case templates |
+The API failure count looks worse than it is. 15 of the 20 come from one problem: the API answers
+every error with HTTP 200 and only puts the real code (400, 404, 405) inside the JSON body. The
+data itself was correct in those cases.
 
-The CSV files use standard columns (ID, Title, Priority, Steps, Expected, Status...) and import
-straight into TestRail, Jira Xray, Zephyr or Excel.
+The one blocked UI case is the cross-browser check. I only had Chrome available for this run.
 
-## Highlights
+## Bugs worth looking at
 
-- **A negative quantity gives a negative cart total.** Typing `-1` on a product page puts
-  Rs. -500 in the cart ([AE-UI-003](defects/defect-reports.md#ae-ui-003--cart-accepts-zero-and-negative-quantities-giving-a-negative-total), with screenshot).
-- **Every API error comes back as HTTP 200.** The documented 400/404/405 codes only appear
-  inside the JSON body ([AE-API-001](defects/defect-reports.md#ae-api-001--error-responses-return-http-200-instead-of-the-documented-4xx-code)).
-  That single defect accounts for 15 of the 20 API failures.
-- **The API creates accounts for emails like `not-an-email-123`** ([AE-API-006](defects/defect-reports.md#ae-api-006--createaccount-accepts-an-email-with-no-valid-format)),
-  and it is served over plain HTTP with no redirect ([AE-API-005](defects/defect-reports.md#ae-api-005--api-answers-over-plain-http-with-no-redirect-or-hsts)).
-- **What worked:** all three end-to-end customer journeys, registration, login, checkout and
-  invoice download. The API never returned the password, wrong passwords got the same reply as
-  unknown users, and injection characters were handled safely.
+- Typing `-1` as the quantity on a product page puts Rs. -500 in the cart. 0 and 1,000,000 are
+  accepted too ([AE-UI-003](defects/defect-reports.md#ae-ui-003-cart-accepts-zero-and-negative-quantities-giving-a-negative-total),
+  screenshot included). This is the one I'd fix first.
+- The `createAccount` API happily creates an account for the email `not-an-email-123`
+  ([AE-API-006](defects/defect-reports.md#ae-api-006-createaccount-accepts-an-email-with-no-valid-format)).
+- The API is served over plain HTTP without redirecting to HTTPS, and the account endpoints take
+  the password as form data ([AE-API-005](defects/defect-reports.md#ae-api-005-api-answers-over-plain-http-with-no-redirect-or-hsts)).
+- The payment form accepts a card number of `abcd` and an expiry date in 2020
+  ([AE-UI-001](defects/defect-reports.md#ae-ui-001-payment-accepts-malformed-and-expired-card-details)).
 
-## How I approached it
+Plenty worked well, too. All three end-to-end purchase journeys passed, the API never returned a
+user's password, and a wrong password got exactly the same response as an unknown email, so you
+can't use it to find out who has an account.
 
-1. **Explored the app** page by page and read the API documentation to understand what exists.
-2. **Wrote requirements** from that, since no specification is published, and rated each area by risk.
-3. **Designed cases** with equivalence partitioning, boundary values and decision tables. The
-   negative paths get as much attention as the happy paths.
-4. **Ran the cases.** API cases with curl; UI cases in a visible Chrome window, each from a fresh
-   session. Anything that failed was re-checked before a defect was raised, and every test account
-   was deleted afterwards.
-5. **Reported** what passed, what failed, what couldn't be run and why, and what I'd recommend next.
+## What's in here
 
-## Conventions
+- [test-strategy.md](test-strategy.md): scope, test types, approach, environments, entry and exit
+  criteria, risks.
+- [ui/ui-test-plan.md](ui/ui-test-plan.md): features and risk, decision tables, boundary values,
+  test data and exploratory charters. The cases are in [ui/test-cases.md](ui/test-cases.md).
+- [api/api-test-plan.md](api/api-test-plan.md): the endpoints, what's checked on each one, and
+  the account lifecycle. The cases are in [api/test-cases.md](api/test-cases.md).
+- [traceability-matrix.md](traceability-matrix.md): requirements mapped to test cases and their
+  latest result.
+- [defects/defect-reports.md](defects/defect-reports.md): every defect with steps to reproduce,
+  plus the open questions.
+- [reports/test-execution-report.md](reports/test-execution-report.md): results by area, how the
+  run was done, and my recommendation.
+- [evidence/](evidence) has the screenshots, and [templates/](templates) has the bug report and
+  test case templates I used.
 
-| Prefix | Meaning |
-|---|---|
-| `UI-AUTH`, `UI-PROD`, `UI-CART`, `UI-CHK`, `UI-MISC`, `UI-NFR`, `UI-E2E` | UI test case by module |
-| `API-PRD`, `API-BRD`, `API-SRC`, `API-LGN`, `API-ACC`, `API-GEN` | API test case by endpoint group |
-| `REQ-`, `NFR-`, `API-REQ-` | Derived functional, non-functional and API requirements |
-| `AE-UI-`, `AE-API-` | Defect report |
-| `Q-` | Open question for the product owner |
+Both case lists are also available as CSV ([UI](ui/test-cases.csv), [API](api/test-cases.csv)).
+They use standard columns, so you can import them into TestRail, Xray or Excel.
+
+## How I went about it
+
+I spent the first part just using the site and reading the API docs, then wrote down what it
+should do as numbered requirements (`REQ-`, `NFR-`, `API-REQ-`). Checkout, payment and login got
+the most cases because that's where failures would cost a real shop money or expose accounts.
+
+For the inputs with rules (cart quantity, mobile number, card details, search) I used equivalence
+partitioning and boundary values. Login outcomes are a small decision table in the UI plan.
+
+API cases were run with curl. For the UI I ran each case in a visible Chrome window, starting from
+a fresh session so carts and logins couldn't carry over between cases. All test accounts used
+throwaway `@example.com` addresses and were deleted at the end.
+
+I re-checked anything that failed before raising it, which caught a mistake of my own. The first
+time through, the cart quantity case passed, but that turned out to be my input method rather
+than the site. When I typed the value normally, the negative-total bug showed up. Another case
+failed on a page timeout and passed when re-run, so I didn't raise a defect for it.
+
+## Naming
+
+Test cases are `UI-<module>-NN` (AUTH, PROD, CART, CHK, MISC, NFR, E2E) and `API-<group>-NN` (PRD,
+BRD, SRC, LGN, ACC, GEN). Defects are `AE-UI-NNN` and `AE-API-NNN`, and open questions are `Q-NN`.
 
 ---
 
-Afzal Ahmed · QA Engineer · [GitHub](https://github.com/afzal-ahmed-qa)
+Afzal Ahmed, [github.com/afzal-ahmed-qa](https://github.com/afzal-ahmed-qa)
 
-*Automation Exercise is a free practice site run by its owners. This repo is independent test
-documentation written for learning and portfolio purposes.*
+Automation Exercise is run by its own team. I'm not connected with them; this was written as
+practice and for my portfolio.

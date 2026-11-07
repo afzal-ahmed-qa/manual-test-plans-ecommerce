@@ -5,7 +5,7 @@
 | Application | https://automationexercise.com |
 | Author | Afzal Ahmed |
 | Version | 1.0 – 7 Nov 2026 |
-| Related | [Test strategy](../test-strategy.md) · [Test cases](test-cases.md) · [CSV](test-cases.csv) |
+| Related | [Test strategy](../test-strategy.md), [Test cases](test-cases.md), [CSV](test-cases.csv) |
 
 ## 1. Features under test
 

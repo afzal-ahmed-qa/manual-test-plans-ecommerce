@@ -4,7 +4,7 @@ Web shop at https://automationexercise.com. Scope and approach are in the [UI te
 The same cases are in [test-cases.csv](test-cases.csv) for import into TestRail, Xray or Excel.
 Results are from the run on 2026-11-07, see the [execution report](../reports/test-execution-report.md).
 
-**50 cases** · Pass 45 · Fail 4 · Blocked 1
+**50 cases**, Pass 45, Fail 4, Blocked 1
 
 | Module | Cases | High | Medium | Low | Pass | Fail | Blocked |
 |---|---|---|---|---|---|---|---|
@@ -500,7 +500,7 @@ Results are from the run on 2026-11-07, see the [execution report](../reports/te
 
 **Expected:** 1 and 999 are accepted. 0, negative and non-numeric values are rejected or corrected to 1. Very large values are capped or refused with a message. Record actual behaviour; anything accepted below 1 is a defect.
 
-**Result: Fail** · AE-UI-003. Quantity 1 and 999 accepted correctly. 0 added a line with total Rs. 0; -1 added a line with total Rs. -500; 1000000 accepted (total Rs. 500,000,000); "abc" leaves the field empty and adds nothing.
+**Result: Fail**, AE-UI-003. Quantity 1 and 999 accepted correctly. 0 added a line with total Rs. 0; -1 added a line with total Rs. -500; 1000000 accepted (total Rs. 500,000,000); "abc" leaves the field empty and adds nothing.
 
 ### UI-CART-04
 
@@ -683,7 +683,7 @@ Results are from the run on 2026-11-07, see the [execution report](../reports/te
 
 **Expected:** Order is refused with a clear message. On a demo site this may be accepted; if so, raise it as a risk for any real payment integration.
 
-**Result: Fail** · AE-UI-001. Order placed with card number "abcd", with CVC "1" and with expiry 01/2020. No client-side card validation. Raised as a risk for a real payment integration.
+**Result: Fail**, AE-UI-001. Order placed with card number "abcd", with CVC "1" and with expiry 01/2020. No client-side card validation. Raised as a risk for a real payment integration.
 
 ### UI-CHK-07
 
@@ -908,7 +908,7 @@ Results are from the run on 2026-11-07, see the [execution report](../reports/te
 
 **Expected:** Navigation collapses into a menu; no horizontal scrolling; buttons are large enough to tap.
 
-**Result: Fail** · AE-UI-004. No horizontal scrolling at 375 × 812, but the header never collapses: 8 menu links wrap over three rows above the content. Usable, not the expected collapsed menu.
+**Result: Fail**, AE-UI-004. No horizontal scrolling at 375 × 812, but the header never collapses: 8 menu links wrap over three rows above the content. Usable, not the expected collapsed menu.
 
 ### UI-NFR-03
 
@@ -944,7 +944,7 @@ Results are from the run on 2026-11-07, see the [execution report](../reports/te
 
 **Expected:** No critical WCAG 2.1 AA violations. Record score and issues.
 
-**Result: Fail** · AE-UI-002. /: 3 violations (1 critical: button-name); /product_details/1: 3 violations (2 critical: button-name, label); /login: 2 violations (1 critical: button-name). button-name: icon-only buttons (e.g. the subscribe arrow) have no accessible name; label: form field without a label on the product page.
+**Result: Fail**, AE-UI-002. /: 3 violations (1 critical: button-name); /product_details/1: 3 violations (2 critical: button-name, label); /login: 2 violations (1 critical: button-name). button-name: icon-only buttons (e.g. the subscribe arrow) have no accessible name; label: form field without a label on the product page.
 
 ### UI-NFR-05
 
