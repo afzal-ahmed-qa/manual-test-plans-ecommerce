@@ -1,0 +1,106 @@
+ID,Module,Title,Priority,Type,Requirement,Preconditions,Test data,Steps,Expected result,Status,Actual result,Defect
+"UI-AUTH-01","Registration, login and account","Register a new customer with all mandatory details","High","Functional, positive","REQ-01","Email address not registered before.","Name: Priya Shah; Email: unique, e.g. priya.shah+<timestamp>@example.com; Password: Secret#123; Country: Canada","1. Open the home page and click ""Signup / Login"".
+2. Under ""New User Signup!"" enter name and email, click ""Signup"".
+3. Check ""ENTER ACCOUNT INFORMATION"" is shown with name and email pre-filled.
+4. Fill title, password, date of birth, first/last name, address, country, state, city, zipcode and mobile number.
+5. Click ""Create Account"".
+6. Click ""Continue"".","""ACCOUNT CREATED!"" is shown. After Continue the header reads ""Logged in as Priya Shah"".","Not run","",""
+"UI-AUTH-02","Registration, login and account","Signup is refused for an email that is already registered","High","Functional, negative","REQ-01","An account exists for the email used.","Existing email","1. Go to ""Signup / Login"".
+2. Enter any name and the existing email under ""New User Signup!"".
+3. Click ""Signup"".","Stays on the page with the message ""Email Address already exist!"". No second account is created.","Not run","",""
+"UI-AUTH-03","Registration, login and account","Signup email must be a valid address","Medium","Validation, negative","REQ-01","-","priya.shah, priya@, @example.com","1. Go to ""Signup / Login"".
+2. Enter a name and each invalid email in turn.
+3. Click ""Signup"".","Form is not submitted; the browser flags the email field as invalid.","Not run","",""
+"UI-AUTH-04","Registration, login and account","Account information form enforces mandatory fields","High","Validation, negative","REQ-01","On ""ENTER ACCOUNT INFORMATION"" after step 2 of UI-AUTH-01.","Leave password, first name, last name, address, state, city, zipcode, mobile empty one at a time","1. Leave one mandatory field empty and fill the rest.
+2. Click ""Create Account"".
+3. Repeat for each mandatory field.","Account is not created while any mandatory field is empty; the empty field is highlighted.","Not run","",""
+"UI-AUTH-05","Registration, login and account","Log in with a valid email and password","High","Functional, positive","REQ-02","Registered account.","Valid credentials","1. Go to ""Signup / Login"".
+2. Enter email and password under ""Login to your account"".
+3. Click ""Login"".","Home page opens and the header shows ""Logged in as <name>"", plus ""Logout"" and ""Delete Account"" links.","Not run","",""
+"UI-AUTH-06","Registration, login and account","Login is refused with a wrong password","High","Functional, negative","REQ-02","Registered account.","Valid email, wrong password","1. Enter the email and a wrong password.
+2. Click ""Login"".","""Your email or password is incorrect!"" is shown and the user stays logged out.","Not run","",""
+"UI-AUTH-07","Registration, login and account","Unknown email gets the same message as a wrong password","Medium","Security, negative","REQ-02","-","Unregistered email","1. Enter an email that has never been registered and any password.
+2. Click ""Login"".","Same generic message as UI-AUTH-06, so the page does not reveal which emails are registered.","Not run","",""
+"UI-AUTH-08","Registration, login and account","Logout ends the session","High","Functional","REQ-02","Logged in.","-","1. Click ""Logout"".
+2. Press the browser Back button.
+3. Reload the page.","Login page opens. Going back and reloading does not show ""Logged in as"".","Not run","",""
+"UI-AUTH-09","Registration, login and account","Delete account removes access","High","Functional","REQ-03","Logged in with a throwaway account.","-","1. Click ""Delete Account"".
+2. Click ""Continue"".
+3. Try to log in with the same credentials.","""ACCOUNT DELETED!"" is shown; logging in again fails with the incorrect-credentials message.","Not run","",""
+"UI-AUTH-10","Registration, login and account","Password is masked and never appears in the URL","Low","Security","REQ-02","-","-","1. Type a password in the login form.
+2. Submit and look at the address bar and browser history.","Characters are masked while typing; the password is not part of any URL.","Not run","",""
+"UI-PROD-01","Product catalogue and search","All Products page lists the catalogue","High","Functional","REQ-04","-","-","1. Click ""Products"" in the header.","""ALL PRODUCTS"" heading with product cards, each showing image, name, price, ""Add to cart"" and ""View Product"".","Not run","",""
+"UI-PROD-02","Product catalogue and search","Product detail page shows full product information","High","Functional","REQ-04","-","First product (Blue Top)","1. On All Products click ""View Product"" for the first item.","Detail page shows name, category, price, availability, condition and brand.","Not run","",""
+"UI-PROD-03","Product catalogue and search","Search returns matching products only","High","Functional, positive","REQ-05","-","jean","1. On All Products type the keyword in ""Search Product"".
+2. Click the search button.","""SEARCHED PRODUCTS"" heading; every result contains the keyword in its name or category.","Not run","",""
+"UI-PROD-04","Product catalogue and search","Search with no matches shows an empty result","Medium","Functional, negative","REQ-05","-","zzqqxx","1. Search for a keyword that matches nothing.","No product cards and no error page. (A helpful ""no results"" message is expected; record what is actually shown.)","Not run","",""
+"UI-PROD-05","Product catalogue and search","Search ignores letter case","Low","Functional","REQ-05","-","top, TOP, ToP","1. Search for each variant.","Same results for every variant.","Not run","",""
+"UI-PROD-06","Product catalogue and search","Filter by category","Medium","Functional","REQ-06","-","Women → Dress, Men → Tshirts","1. In the left sidebar expand ""Women"" and click ""Dress"".
+2. Then expand ""Men"" and click ""Tshirts"".","Headings ""WOMEN - DRESS PRODUCTS"" and ""MEN - TSHIRTS PRODUCTS""; only products from that category are listed.","Not run","",""
+"UI-PROD-07","Product catalogue and search","Filter by brand and check the product count","Medium","Functional","REQ-06","-","Polo, then H&M","1. Click a brand under ""Brands"".
+2. Count the products shown and compare with the number next to the brand.","""BRAND - POLO PRODUCTS"" heading; number of cards equals the count in brackets in the sidebar.","Not run","",""
+"UI-PROD-08","Product catalogue and search","Write a product review","Medium","Functional","REQ-07","On a product detail page.","Name, email, review text","1. Fill ""Your Name"", ""Email Address"" and ""Add Review Here!"".
+2. Click ""Submit"".","""Thank you for your review."" is shown and the form is cleared.","Not run","",""
+"UI-PROD-09","Product catalogue and search","Review cannot be submitted with empty fields","Low","Validation, negative","REQ-07","On a product detail page.","Empty name / email / review","1. Leave one field empty at a time and click ""Submit"".","Review is not submitted; the empty field is flagged.","Not run","",""
+"UI-PROD-10","Product catalogue and search","Add to cart from ""Recommended Items""","Low","Functional","REQ-08","-","-","1. Scroll to ""RECOMMENDED ITEMS"" at the bottom of the home page.
+2. Click ""Add to cart"" on a product.
+3. Click ""View Cart"".","The recommended product is in the cart.","Not run","",""
+"UI-CART-01","Shopping cart","Add two products and check the cart lines","High","Functional","REQ-08","Empty cart.","Blue Top (Rs. 500), Men Tshirt (Rs. 400)","1. On All Products hover the first product and click ""Add to cart"", then ""Continue Shopping"".
+2. Add the second product and click ""View Cart"".","Both products listed with correct name, price, quantity 1 and line total.","Not run","",""
+"UI-CART-02","Shopping cart","Quantity chosen on the detail page is kept","High","Functional","REQ-08","Empty cart.","Quantity 4","1. Open a product detail page.
+2. Set quantity to 4 and click ""Add to cart"".
+3. Click ""View Cart"".","Cart shows quantity 4 and total = price × 4.","Not run","",""
+"UI-CART-03","Shopping cart","Quantity field boundaries on the detail page","Medium","Boundary","REQ-08","On a product detail page.","0, -1, 1, 999, 1000000, ""abc""","1. Enter each value in Quantity and click ""Add to cart"".
+2. Check the cart after each attempt.","1 and 999 are accepted. 0, negative and non-numeric values are rejected or corrected to 1. Very large values are capped or refused with a message. Record actual behaviour; anything accepted below 1 is a defect.","Not run","",""
+"UI-CART-04","Shopping cart","Remove a product from the cart","High","Functional","REQ-09","Cart has two products.","-","1. Open the cart.
+2. Click the ""X"" next to one product.","That line disappears without a page reload; the other product remains.","Not run","",""
+"UI-CART-05","Shopping cart","Empty cart message","Low","Functional","REQ-09","Cart has one product.","-","1. Remove the last product.","""Cart is empty! Click here to buy products."" with a link back to Products.","Not run","",""
+"UI-CART-06","Shopping cart","Guest cart is kept after logging in","High","Functional","REQ-10","Logged out; registered account available.","-","1. As a guest search ""top"" and add every result to the cart.
+2. Log in.
+3. Open the cart.","All products added as a guest are still in the cart.","Not run","",""
+"UI-CHK-01","Checkout, payment and invoice","Guest is asked to register or log in at checkout","High","Functional","REQ-11","Logged out, cart not empty.","-","1. Open the cart and click ""Proceed To Checkout"".","A ""Checkout"" modal says ""Register / Login account to proceed on checkout."" with a link to the login page.","Not run","",""
+"UI-CHK-02","Checkout, payment and invoice","Delivery and billing address match the account details","High","Functional","REQ-11","Logged in, cart not empty.","Account created in UI-AUTH-01","1. Proceed to checkout.
+2. Compare ""Your delivery address"" and ""Your billing address"" with the details entered at signup.","Both addresses show the same title, name, company, address lines, city, state, zipcode, country and phone.","Not run","",""
+"UI-CHK-03","Checkout, payment and invoice","Review order totals before paying","High","Functional","REQ-11","Logged in, two products in cart.","-","1. Proceed to checkout.
+2. Check ""Review Your Order"".","Same products, quantities and totals as the cart; the total amount is the sum of the lines.","Not run","",""
+"UI-CHK-04","Checkout, payment and invoice","Pay with complete card details","High","Functional, positive","REQ-12","On the checkout page.","Name on card, card number 4111 1111 1111 1111, CVC 123, expiry 12/2030","1. Add a comment, click ""Place Order"".
+2. Fill all payment fields.
+3. Click ""Pay and Confirm Order"".","""ORDER PLACED!"" and ""Congratulations! Your order has been confirmed!"" are shown.","Not run","",""
+"UI-CHK-05","Checkout, payment and invoice","Payment form enforces mandatory fields","High","Validation, negative","REQ-12","On the payment page.","Each field empty in turn","1. Leave one payment field empty and click ""Pay and Confirm Order"".","Order is not placed while any field is empty.","Not run","",""
+"UI-CHK-06","Checkout, payment and invoice","Payment rejects malformed or expired cards","Medium","Validation, negative","REQ-12","On the payment page.","Card number ""abcd"", CVC ""1"", expiry 01/2020","1. Enter each invalid value with the other fields valid.
+2. Click ""Pay and Confirm Order"".","Order is refused with a clear message. On a demo site this may be accepted; if so, raise it as a risk for any real payment integration.","Not run","",""
+"UI-CHK-07","Checkout, payment and invoice","Download the invoice after ordering","Medium","Functional","REQ-13","Order just placed (UI-CHK-04).","-","1. Click ""Download Invoice"".
+2. Open the downloaded file.","A file is downloaded and states the customer name and the total amount of the order.","Not run","",""
+"UI-CHK-08","Checkout, payment and invoice","Cart is emptied after a successful order","Medium","Functional","REQ-12","Order just placed.","-","1. Click ""Continue"", then open the cart.","Cart is empty.","Not run","",""
+"UI-MISC-01","Contact us, subscription and navigation","Contact form with a file attachment","Medium","Functional","REQ-14","-","Name, email, subject, message, small .txt file","1. Click ""Contact us"".
+2. Fill every field and choose a file.
+3. Click ""Submit"" and accept the browser confirmation.","""Success! Your details have been submitted successfully."" ""Home"" returns to the home page.","Not run","",""
+"UI-MISC-02","Contact us, subscription and navigation","Contact form requires a valid email","Low","Validation, negative","REQ-14","-","Empty email, ""not-an-email""","1. Fill the form without a valid email and submit.","Form is not submitted; email field flagged.","Not run","",""
+"UI-MISC-03","Contact us, subscription and navigation","Subscribe from the home page footer","Medium","Functional","REQ-15","-","Valid email","1. Scroll to the footer, enter an email under ""SUBSCRIPTION"", click the arrow.","""You have been successfully subscribed!"" is shown.","Not run","",""
+"UI-MISC-04","Contact us, subscription and navigation","Subscribe from the cart page footer","Low","Functional","REQ-15","-","Valid email","1. Open the cart, subscribe from the footer.","Same success message as UI-MISC-03.","Not run","",""
+"UI-MISC-05","Contact us, subscription and navigation","Subscription rejects an invalid email","Low","Validation, negative","REQ-15","-","priya@","1. Enter the invalid email and click the arrow.","No success message; the field is flagged.","Not run","",""
+"UI-MISC-06","Contact us, subscription and navigation","Header navigation reaches every main page","Medium","Navigation","REQ-16","-","-","1. Click each header link: Home, Products, Cart, Signup / Login, Test Cases, API Testing, Contact us.","Each link opens the right page with its heading; no broken links.","Not run","",""
+"UI-MISC-07","Contact us, subscription and navigation","Scroll-up arrow returns to the top","Low","UI","REQ-16","-","-","1. Scroll to the bottom of the home page.
+2. Click the arrow in the bottom-right corner.","Page scrolls to the top and the banner text ""Full-Fledged practice website for Automation Engineers"" is visible.","Not run","",""
+"UI-NFR-01","Non-functional (compatibility, accessibility, performance)","Cross-browser smoke test","High","Compatibility","NFR-01","Latest Chrome, Firefox, Edge and Safari.","-","1. Run UI-AUTH-05, UI-PROD-03, UI-CART-01 and UI-CHK-04 in each browser.","Same behaviour and no layout breakage in every browser.","Not run","",""
+"UI-NFR-02","Non-functional (compatibility, accessibility, performance)","Usable on a mobile screen","Medium","Responsive","NFR-02","DevTools device mode, 375 × 812 (iPhone X class).","-","1. Open home, products, cart and checkout pages.","Navigation collapses into a menu; no horizontal scrolling; buttons are large enough to tap.","Not run","",""
+"UI-NFR-03","Non-functional (compatibility, accessibility, performance)","Login and signup with the keyboard only","Medium","Accessibility","NFR-03","-","-","1. Use Tab, Shift+Tab and Enter only to fill and submit the login form.","Every field and button is reachable in a logical order with a visible focus indicator.","Not run","",""
+"UI-NFR-04","Non-functional (compatibility, accessibility, performance)","Automated accessibility scan","Low","Accessibility","NFR-03","axe DevTools or Lighthouse.","Home, product detail, login, checkout","1. Run the scan on each page.","No critical WCAG 2.1 AA violations. Record score and issues.","Not run","",""
+"UI-NFR-05","Non-functional (compatibility, accessibility, performance)","Page load time","Low","Performance (indicative)","NFR-04","DevTools Network tab, cache disabled, no throttling.","-","1. Load home, products and a product detail page three times each.","DOMContentLoaded under 3 s on average. This is a sanity check, not a load test.","Not run","",""
+"UI-NFR-06","Non-functional (compatibility, accessibility, performance)","Site is served over HTTPS","Medium","Security","NFR-05","-","http://automationexercise.com","1. Open the http:// address.","Browser is redirected to https:// and shows a valid certificate.","Not run","",""
+"UI-E2E-01","End-to-end customer journeys","New customer: register at checkout, pay, download invoice, delete account","High","End-to-end","REQ-01, REQ-03, REQ-08, REQ-11, REQ-12, REQ-13","Logged out, empty cart.","New customer details, test card","1. Add two products to the cart as a guest.
+2. Proceed to checkout and choose Register / Login.
+3. Sign up and complete account information.
+4. Return to the cart and proceed to checkout.
+5. Verify address and order review, add a comment, place the order.
+6. Pay with the test card.
+7. Download the invoice.
+8. Delete the account.","Order confirmed, invoice downloaded with the right total, account deleted.","Not run","",""
+"UI-E2E-02","End-to-end customer journeys","Returning customer: log in, search, buy","High","End-to-end","REQ-02, REQ-05, REQ-08, REQ-11, REQ-12","Registered account, empty cart.","Search term ""jean""","1. Log in.
+2. Search for jeans, open one and set quantity 2.
+3. Add to cart and check out.
+4. Pay with the test card.","Order confirmed; cart is empty afterwards.","Not run","",""
+"UI-E2E-03","End-to-end customer journeys","Browsing shopper: filter, compare, edit cart, then log in","Medium","End-to-end","REQ-06, REQ-08, REQ-09, REQ-10","Logged out.","Category Women → Tops, brand Polo","1. Filter by category and add one product.
+2. Filter by brand and add one product.
+3. Remove the first product from the cart.
+4. Log in and open the cart.","Only the brand product remains in the cart after login.","Not run","",""
