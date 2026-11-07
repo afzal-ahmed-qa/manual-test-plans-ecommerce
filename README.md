@@ -15,11 +15,12 @@ find. The automation side is in
 |---|---|---|
 | Test cases | 50 | 38 |
 | Priority (High / Medium / Low) | 22 / 17 / 11 | 20 / 14 / 4 |
-| Executed | Planned for cycle 2 | 23 of 38 (read-only scope) |
-| Result | – | 10 pass · 12 fail · 1 query |
-| Defects raised | – | 5 (2 Major, 2 Minor, 1 Trivial) |
+| Executed | 49 of 50 | 38 of 38 |
+| Result | 45 pass · 4 fail · 1 blocked | 17 pass · 20 fail · 1 query |
+| Defects raised | 4 | 6 |
 
-Requirements covered: 32 of 32 ([traceability matrix](traceability-matrix.md)).
+10 defects in total (5 Major, 4 Minor, 1 Trivial). 32 of 32 requirements covered, 18 met
+([traceability matrix](traceability-matrix.md)).
 
 ## What's inside
 
@@ -31,23 +32,26 @@ Requirements covered: 32 of 32 ([traceability matrix](traceability-matrix.md)).
 | [API test plan](api/api-test-plan.md) | Endpoint inventory, checks per endpoint, method matrix, input classes, account lifecycle |
 | [API test cases](api/test-cases.md) · [CSV](api/test-cases.csv) | 38 cases with request, expected and actual result |
 | [Traceability matrix](traceability-matrix.md) | 32 derived requirements → test cases → latest result |
-| [Defect reports](defects/defect-reports.md) | 5 reproducible defects with curl steps, plus 3 open questions |
-| [Execution report](reports/test-execution-report.md) | Cycle 1 results, what wasn't run and why, recommendation |
+| [Defect reports](defects/defect-reports.md) | 10 reproducible defects with steps, curl commands or screenshots, plus 5 open questions |
+| [Execution report](reports/test-execution-report.md) | Results by module, how the run was done, what was re-checked, recommendation |
+| [Evidence](evidence) | Screenshots attached to defects |
 | [Templates](templates) | Bug report and test case templates |
 
 The CSV files use standard columns (ID, Title, Priority, Steps, Expected, Status...) and import
 straight into TestRail, Jira Xray, Zephyr or Excel.
 
-## Highlights from the API run
+## Highlights
 
-- **Every error comes back as HTTP 200.** The documented 400/405 codes only appear inside the JSON
-  body ([AE-API-001](defects/defect-reports.md#ae-api-001--error-responses-return-http-200-instead-of-the-documented-4xx-code)).
-  This one defect caused 8 of the 12 failures.
-- **The API is served over plain HTTP** with no redirect or HSTS, and the account endpoints take
-  passwords as form data ([AE-API-005](defects/defect-reports.md#ae-api-005--api-answers-over-plain-http-with-no-redirect-or-hsts)).
-- **The brands list has duplicates:** 34 entries for 8 brands ([AE-API-003](defects/defect-reports.md#ae-api-003--brandslist-repeats-each-brand-once-per-product)).
-- Search handled injection characters and script tags safely, and the read endpoints answered in
-  under 2 seconds.
+- **A negative quantity gives a negative cart total.** Typing `-1` on a product page puts
+  Rs. -500 in the cart ([AE-UI-003](defects/defect-reports.md#ae-ui-003--cart-accepts-zero-and-negative-quantities-giving-a-negative-total), with screenshot).
+- **Every API error comes back as HTTP 200.** The documented 400/404/405 codes only appear
+  inside the JSON body ([AE-API-001](defects/defect-reports.md#ae-api-001--error-responses-return-http-200-instead-of-the-documented-4xx-code)).
+  That single defect accounts for 15 of the 20 API failures.
+- **The API creates accounts for emails like `not-an-email-123`** ([AE-API-006](defects/defect-reports.md#ae-api-006--createaccount-accepts-an-email-with-no-valid-format)),
+  and it is served over plain HTTP with no redirect ([AE-API-005](defects/defect-reports.md#ae-api-005--api-answers-over-plain-http-with-no-redirect-or-hsts)).
+- **What worked:** all three end-to-end customer journeys, registration, login, checkout and
+  invoice download. The API never returned the password, wrong passwords got the same reply as
+  unknown users, and injection characters were handled safely.
 
 ## How I approached it
 
@@ -55,9 +59,10 @@ straight into TestRail, Jira Xray, Zephyr or Excel.
 2. **Wrote requirements** from that, since no specification is published, and rated each area by risk.
 3. **Designed cases** with equivalence partitioning, boundary values and decision tables. The
    negative paths get as much attention as the happy paths.
-4. **Ran the API cases** that don't change data, recorded actual results and raised defects with
-   one-line reproduction steps.
-5. **Reported** what passed, what failed, what wasn't run and why, and what I'd recommend next.
+4. **Ran the cases.** API cases with curl; UI cases in a visible Chrome window, each from a fresh
+   session. Anything that failed was re-checked before a defect was raised, and every test account
+   was deleted afterwards.
+5. **Reported** what passed, what failed, what couldn't be run and why, and what I'd recommend next.
 
 ## Conventions
 
@@ -66,7 +71,7 @@ straight into TestRail, Jira Xray, Zephyr or Excel.
 | `UI-AUTH`, `UI-PROD`, `UI-CART`, `UI-CHK`, `UI-MISC`, `UI-NFR`, `UI-E2E` | UI test case by module |
 | `API-PRD`, `API-BRD`, `API-SRC`, `API-LGN`, `API-ACC`, `API-GEN` | API test case by endpoint group |
 | `REQ-`, `NFR-`, `API-REQ-` | Derived functional, non-functional and API requirements |
-| `AE-API-` | Defect report |
+| `AE-UI-`, `AE-API-` | Defect report |
 | `Q-` | Open question for the product owner |
 
 ---

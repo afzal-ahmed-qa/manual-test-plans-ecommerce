@@ -3,7 +3,9 @@
 REST API at https://automationexercise.com/api. Scope and approach are in the [API test plan](api-test-plan.md).
 CSV version: [test-cases.csv](test-cases.csv). Results are from the run on 2026-11-07, see the [execution report](../reports/test-execution-report.md).
 
-**38 cases** · Pass 10 · Fail 12 · Query 1 · Not run 15
+**38 cases** · Pass 17 · Fail 20 · Query 1
+
+Where a case expects a specific HTTP status, the HTTP status line is what is judged, even if the JSON body carries the right code.
 
 ## Products
 
@@ -40,29 +42,29 @@ CSV version: [test-cases.csv](test-cases.csv). Results are from the run on 2026-
 
 | ID | Title | Request | Expected | Status | Actual / notes |
 |---|---|---|---|---|---|
-| API-LGN-01 | Verify login with valid credentials<br>*High · Positive* | `POST /api/verifyLogin  email, password` | HTTP 200 "User exists!" | Not run | Needs a dedicated test account (see execution report). |
+| API-LGN-01 | Verify login with valid credentials<br>*High · Positive* | `POST /api/verifyLogin  email, password` | HTTP 200 "User exists!" | Pass | HTTP 200, responseCode 200, "User exists!" |
 | API-LGN-02 | Missing email parameter<br>*High · Negative* | `POST /api/verifyLogin  password only` | HTTP 400 "Bad request, email or password parameter is missing in POST request." | Fail | Correct message, HTTP 200 with responseCode 400 in the body. **AE-API-001** |
-| API-LGN-03 | Missing password parameter<br>*Medium · Negative* | `POST /api/verifyLogin  email only` | HTTP 400 with the same message. | Not run |  |
+| API-LGN-03 | Missing password parameter<br>*Medium · Negative* | `POST /api/verifyLogin  email only` | HTTP 400 with the same message. | Fail | HTTP 200, responseCode 400, "Bad request, email or password parameter is missing in POST request." Functionally correct, but HTTP 200 (AE-API-001). **AE-API-001** |
 | API-LGN-04 | DELETE is not allowed on verifyLogin<br>*Medium · Negative, method* | `DELETE /api/verifyLogin` | HTTP 405. | Fail | HTTP 200 with responseCode 405 in the body. **AE-API-001** |
-| API-LGN-05 | Unknown user<br>*High · Negative* | `POST /api/verifyLogin  unregistered email` | HTTP 404 "User not found!" | Not run |  |
-| API-LGN-06 | Wrong password for an existing user<br>*High · Negative, security* | `POST /api/verifyLogin  valid email, wrong password` | Same response as an unknown user, so valid emails cannot be discovered. | Not run |  |
+| API-LGN-05 | Unknown user<br>*High · Negative* | `POST /api/verifyLogin  unregistered email` | HTTP 404 "User not found!" | Fail | HTTP 200, responseCode 404, "User not found!" Functionally correct, but HTTP 200 (AE-API-001). **AE-API-001** |
+| API-LGN-06 | Wrong password for an existing user<br>*High · Negative, security* | `POST /api/verifyLogin  valid email, wrong password` | Same response as an unknown user, so valid emails cannot be discovered. | Pass | Wrong password and unknown user get the identical response (responseCode 404, "User not found!"). |
 
 ## User accounts
 
 | ID | Title | Request | Expected | Status | Actual / notes |
 |---|---|---|---|---|---|
-| API-ACC-01 | Create an account with all fields<br>*High · Positive* | `POST /api/createAccount  name, email, password, title, birth_date/month/year, firstname, lastname, company, address1/2, country, zipcode, state, city, mobile_number` | HTTP 201 "User created!" | Not run |  |
-| API-ACC-02 | Duplicate email is rejected<br>*High · Negative* | `POST /api/createAccount  same email as API-ACC-01` | 4xx with a clear "already exists" message; no second account. | Not run |  |
-| API-ACC-03 | Missing mandatory field<br>*High · Negative* | `POST /api/createAccount  without email (then without password, name...)` | HTTP 400 naming the missing parameter. | Not run |  |
-| API-ACC-04 | Invalid email format<br>*Medium · Validation* | `POST /api/createAccount  email=not-an-email` | HTTP 400; account not created. | Not run |  |
-| API-ACC-05 | Get account details by email<br>*High · Positive, security* | `GET /api/getUserDetailByEmail?email=<email>` | HTTP 200 with the details sent at creation. The password must not be returned. | Not run |  |
+| API-ACC-01 | Create an account with all fields<br>*High · Positive* | `POST /api/createAccount  name, email, password, title, birth_date/month/year, firstname, lastname, company, address1/2, country, zipcode, state, city, mobile_number` | HTTP 201 "User created!" | Fail | Account created: responseCode 201 "User created!", but HTTP 200 (AE-API-001). **AE-API-001** |
+| API-ACC-02 | Duplicate email is rejected<br>*High · Negative* | `POST /api/createAccount  same email as API-ACC-01` | 4xx with a clear "already exists" message; no second account. | Fail | HTTP 200, responseCode 400, "Email already exists!"; no second account. Functionally correct, but HTTP 200 (AE-API-001). **AE-API-001** |
+| API-ACC-03 | Missing mandatory field<br>*High · Negative* | `POST /api/createAccount  without email (then without password, name...)` | HTTP 400 naming the missing parameter. | Fail | HTTP 200, responseCode 400, "Bad request, email parameter is missing in POST request." Functionally correct, but HTTP 200 (AE-API-001). **AE-API-001** |
+| API-ACC-04 | Invalid email format<br>*Medium · Validation* | `POST /api/createAccount  email=not-an-email` | HTTP 400; account not created. | Fail | Account created with email "not-an-email-<timestamp>": responseCode 201 "User created!". No format validation. (Account deleted straight after.) **AE-API-006** |
+| API-ACC-05 | Get account details by email<br>*High · Positive, security* | `GET /api/getUserDetailByEmail?email=<email>` | HTTP 200 with the details sent at creation. The password must not be returned. | Pass | HTTP 200; 16 fields returned, all match the values sent; no password field. |
 | API-ACC-06 | Account details: missing email<br>*Medium · Negative* | `GET /api/getUserDetailByEmail` | HTTP 400 "Bad request, email parameter is missing in GET request." | Fail | Correct message, HTTP 200 with responseCode 400 in the body. **AE-API-001** |
-| API-ACC-07 | Account details: unknown email<br>*Medium · Negative* | `GET /api/getUserDetailByEmail?email=<unregistered>` | HTTP 404. | Not run |  |
-| API-ACC-08 | Update an account<br>*High · Positive* | `PUT /api/updateAccount  all fields, city changed` | HTTP 200 "User updated!"; API-ACC-05 then returns the new city. | Not run |  |
-| API-ACC-09 | Update with a wrong password is refused<br>*High · Negative, security* | `PUT /api/updateAccount  wrong password` | Rejected; account unchanged. | Not run |  |
-| API-ACC-10 | Delete with a wrong password is refused<br>*High · Negative, security* | `DELETE /api/deleteAccount  wrong password` | Rejected; account still exists. | Not run |  |
-| API-ACC-11 | Delete an account<br>*High · Positive* | `DELETE /api/deleteAccount  email, password` | HTTP 200 "Account deleted!"; verifyLogin then reports "User not found!". | Not run |  |
-| API-ACC-12 | Delete an account that no longer exists<br>*Low · Negative* | `DELETE /api/deleteAccount  same credentials again` | HTTP 404. | Not run |  |
+| API-ACC-07 | Account details: unknown email<br>*Medium · Negative* | `GET /api/getUserDetailByEmail?email=<unregistered>` | HTTP 404. | Fail | HTTP 200, responseCode 404, "Account not found with this email, try another email!" Functionally correct, but HTTP 200 (AE-API-001). **AE-API-001** |
+| API-ACC-08 | Update an account<br>*High · Positive* | `PUT /api/updateAccount  all fields, city changed` | HTTP 200 "User updated!"; API-ACC-05 then returns the new city. | Pass | HTTP 200, responseCode 200, "User updated!"; city now "Ottawa". |
+| API-ACC-09 | Update with a wrong password is refused<br>*High · Negative, security* | `PUT /api/updateAccount  wrong password` | Rejected; account unchanged. | Pass | Rejected with responseCode 404 "Account not found!"; city unchanged ("Ottawa"). Message is misleading since the account exists (Q-04). |
+| API-ACC-10 | Delete with a wrong password is refused<br>*High · Negative, security* | `DELETE /api/deleteAccount  wrong password` | Rejected; account still exists. | Pass | Rejected with responseCode 404 "Account not found!"; account still exists (Q-04). |
+| API-ACC-11 | Delete an account<br>*High · Positive* | `DELETE /api/deleteAccount  email, password` | HTTP 200 "Account deleted!"; verifyLogin then reports "User not found!". | Pass | HTTP 200 "Account deleted!"; verifyLogin then returns "User not found!". |
+| API-ACC-12 | Delete an account that no longer exists<br>*Low · Negative* | `DELETE /api/deleteAccount  same credentials again` | HTTP 404. | Fail | HTTP 200, responseCode 404, "Account not found!" Functionally correct, but HTTP 200 (AE-API-001). **AE-API-001** |
 
 ## Cross-cutting (protocol, headers, performance)
 

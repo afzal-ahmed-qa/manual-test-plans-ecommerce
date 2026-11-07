@@ -85,7 +85,6 @@ curl -i -X POST https://automationexercise.com/api/searchProduct
 
 ## 6. Execution status
 
-The read-only part of the suite (products, brands, search and the negative login and
-account-detail calls) was run on 7 Nov 2026. Cases that create, change or delete accounts are
-written and ready but were not run against the shared site. See the
-[execution report](../reports/test-execution-report.md).
+All 38 cases were run on 7 Nov 2026, in two cycles: read-only calls first, then the account
+lifecycle with a throwaway `@example.com` account that was deleted at the end. Results are in
+[test-cases.md](test-cases.md) and summarised in the [execution report](../reports/test-execution-report.md).
