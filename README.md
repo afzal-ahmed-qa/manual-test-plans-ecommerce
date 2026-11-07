@@ -10,7 +10,9 @@ worked out the requirements myself from the live site and the API documentation,
 from those, ran them, and wrote up what I found.
 
 For automation, see my Playwright framework:
-[playwright-typescript-e2e-framework](https://github.com/afzal-ahmed-qa/playwright-typescript-e2e-framework).
+[playwright-typescript-e2e-framework](https://github.com/afzal-ahmed-qa/playwright-typescript-e2e-framework),
+and for API tests in Postman and Newman:
+[petstore-api-tests-postman](https://github.com/afzal-ahmed-qa/petstore-api-tests-postman).
 
 ## Results
 
