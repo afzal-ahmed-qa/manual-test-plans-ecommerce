@@ -12,6 +12,7 @@ from those, ran them, and wrote up what I found.
 For automation, see my Playwright framework:
 [playwright-typescript-e2e-framework](https://github.com/afzal-ahmed-qa/playwright-typescript-e2e-framework),
 and for API tests in Postman and Newman:
+[toolshop-api-tests-postman](https://github.com/afzal-ahmed-qa/toolshop-api-tests-postman) and
 [petstore-api-tests-postman](https://github.com/afzal-ahmed-qa/petstore-api-tests-postman).
 
 ## Results
